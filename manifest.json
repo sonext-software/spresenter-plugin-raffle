@@ -1,0 +1,13 @@
+{
+  "id": "com.spresenter.raffle",
+  "name": "Raffle",
+  "version": "0.3.0",
+  "description": "Draw a winner from a numeric range or a name list, with a spinning wheel or vertical reel animation.",
+  "author": "Chrystian Farias",
+  "minAppVersion": "0.2.11",
+  "sdk": "0.2.11",
+  "main": "dist/code.js",
+  "ui": "dist/ui/index.html",
+  "permissions": ["outputs:read", "live:write"],
+  "panels": [{ "id": "main", "title": "Raffle", "icon": "sparkles" }]
+}
