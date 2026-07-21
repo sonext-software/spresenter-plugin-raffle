@@ -94,13 +94,13 @@ export function buildStageHtml(opts: BuildOpts): string {
   <div class="result">${escapeHtml(truncate(winner, 42))}</div>
 </div>
 <style>
-#${id}.scene{position:absolute;inset:0;display:flex;flex-direction:column;
+#${id}.scene{position:absolute;inset:0;container-type:size;display:flex;flex-direction:column;
   align-items:center;justify-content:center;overflow:hidden;
   font-family:'Inter','Segoe UI',Arial,sans-serif;color:#fff;background:${bg};}
-#${id} .title{position:absolute;top:5vh;font-size:5vh;font-weight:800;
+#${id} .title{position:absolute;top:5cqh;font-size:5cqh;font-weight:800;
   letter-spacing:.01em;text-shadow:0 2px 14px rgba(0,0,0,.6);}
-#${id} .result{position:absolute;bottom:6vh;max-width:88vw;text-align:center;
-  font-size:4.6vh;font-weight:800;line-height:1.15;padding:.35em 1.1em;
+#${id} .result{position:absolute;bottom:6cqh;max-width:88cqw;text-align:center;
+  font-size:4.6cqh;font-weight:800;line-height:1.15;padding:.35em 1.1em;
   border-radius:999px;color:#1a1206;white-space:nowrap;overflow:hidden;
   text-overflow:ellipsis;background:linear-gradient(90deg,#fbbf24,#f97316);
   box-shadow:0 10px 34px rgba(0,0,0,.5);opacity:0;transform:scale(.7);
@@ -195,16 +195,16 @@ function buildWheel(opts: BuildOpts): { markup: string; css: string } {
   </div>`;
 
   const css = `
-#${id} .wheel-wrap{position:relative;width:min(76vh,76vw);aspect-ratio:1;}
+#${id} .wheel-wrap{position:relative;width:min(76cqh,76cqw);aspect-ratio:1;}
 #${id} .wheel{width:100%;height:100%;transform-origin:50% 50%;
   filter:drop-shadow(0 12px 30px rgba(0,0,0,.5));
   animation:spin-${opts.token} ${WHEEL_DURATION}ms cubic-bezier(.10,.62,.16,1) forwards;}
 #${id} .pointer{position:absolute;top:-3.2%;left:50%;transform:translateX(-50%);
-  width:0;height:0;border-left:2.4vh solid transparent;border-right:2.4vh solid transparent;
-  border-top:4.4vh solid #fbbf24;z-index:5;filter:drop-shadow(0 3px 5px rgba(0,0,0,.55));}
+  width:0;height:0;border-left:2.4cqh solid transparent;border-right:2.4cqh solid transparent;
+  border-top:4.4cqh solid #fbbf24;z-index:5;filter:drop-shadow(0 3px 5px rgba(0,0,0,.55));}
 #${id} .hub{position:absolute;top:50%;left:50%;width:10%;height:10%;
   transform:translate(-50%,-50%);border-radius:50%;background:#fff;
-  box-shadow:0 2px 10px rgba(0,0,0,.45),inset 0 0 0 .4vh #fbbf24;z-index:4;}
+  box-shadow:0 2px 10px rgba(0,0,0,.45),inset 0 0 0 .4cqh #fbbf24;z-index:4;}
 @keyframes spin-${opts.token}{from{transform:rotate(0)}to{transform:rotate(${finalDeg.toFixed(3)}deg)}}`;
 
   return { markup, css };
@@ -235,7 +235,7 @@ function buildVertical(opts: BuildOpts): { markup: string; css: string } {
   const winPos = cells.length - 1;
   for (let k = 0; k < 2; k++) cells.push(base[Math.floor(rand() * n)]);
 
-  // 3 visible cells (20vh each, 60vh window); winner in the middle slot.
+  // 3 visible cells (20cqh each, 60cqh window); winner in the middle slot.
   const finalTY = -(winPos - 1) * 20; // vh
 
   const cellHtml = cells
@@ -258,29 +258,29 @@ function buildVertical(opts: BuildOpts): { markup: string; css: string } {
 
   const fadeCss = opts.transparent
     ? ''
-    : `#${id} .fade{position:absolute;left:0;width:100%;height:20vh;z-index:2;pointer-events:none;}
+    : `#${id} .fade{position:absolute;left:0;width:100%;height:20cqh;z-index:2;pointer-events:none;}
 #${id} .fade-top{top:0;background:linear-gradient(#0b1120,rgba(11,17,32,0));}
 #${id} .fade-bot{bottom:0;background:linear-gradient(rgba(11,17,32,0),#0b1120);}`;
 
   const css = `
-#${id} .reel-window{position:relative;width:min(62vw,760px);height:60vh;
-  overflow:hidden;border-radius:2.4vh;background:rgba(255,255,255,.05);
-  box-shadow:inset 0 0 0 .3vh rgba(255,255,255,.10),0 16px 44px rgba(0,0,0,.5);}
+#${id} .reel-window{position:relative;width:min(62cqw,760px);height:60cqh;
+  overflow:hidden;border-radius:2.4cqh;background:rgba(255,255,255,.05);
+  box-shadow:inset 0 0 0 .3cqh rgba(255,255,255,.10),0 16px 44px rgba(0,0,0,.5);}
 #${id} .reel{position:absolute;top:0;left:0;width:100%;will-change:transform,filter;
   animation:roll-${opts.token} ${VERTICAL_DURATION}ms cubic-bezier(.07,.62,.14,1) forwards;}
-#${id} .cell{height:20vh;display:flex;align-items:center;justify-content:center;
-  text-align:center;padding:0 4vw;box-sizing:border-box;font-size:6.4vh;font-weight:800;
+#${id} .cell{height:20cqh;display:flex;align-items:center;justify-content:center;
+  text-align:center;padding:0 4cqw;box-sizing:border-box;font-size:6.4cqh;font-weight:800;
   color:#e2e8f0;text-shadow:0 2px 10px rgba(0,0,0,.5);}
 #${id} .cell:nth-child(2n){color:#cbd5e1;}
-#${id} .slot{position:absolute;top:20vh;left:0;width:100%;height:20vh;z-index:3;
-  pointer-events:none;border-radius:1.4vh;
-  box-shadow:inset 0 0 0 .35vh #fbbf24,inset 0 0 60px rgba(251,191,36,.28);}
+#${id} .slot{position:absolute;top:20cqh;left:0;width:100%;height:20cqh;z-index:3;
+  pointer-events:none;border-radius:1.4cqh;
+  box-shadow:inset 0 0 0 .35cqh #fbbf24,inset 0 0 60px rgba(251,191,36,.28);}
 ${fadeCss}
 @keyframes roll-${opts.token}{
   0%{transform:translateY(0);filter:blur(0)}
   18%{filter:blur(7px)}
   88%{filter:blur(1.5px)}
-  100%{transform:translateY(${finalTY.toFixed(2)}vh);filter:blur(0)}}`;
+  100%{transform:translateY(${finalTY.toFixed(2)}cqh);filter:blur(0)}}`;
 
   return { markup, css };
 }

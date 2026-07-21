@@ -1,7 +1,7 @@
 {
   "id": "com.spresenter.raffle",
   "name": "Raffle",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Draw a winner from a numeric range or a name list, with a spinning wheel or vertical reel animation.",
   "author": "Chrystian Farias",
   "minAppVersion": "0.2.11",
