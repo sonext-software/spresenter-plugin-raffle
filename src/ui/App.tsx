@@ -1,6 +1,21 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { postMessage, onMessage } from '@spresenter/plugin-sdk/ui';
 import {
+  Root,
+  Header,
+  Panel,
+  Row,
+  Field,
+  TextInput,
+  TextArea,
+  Select,
+  Checkbox,
+  Button,
+  Actions,
+  Segmented,
+  Hint,
+} from '@spresenter/plugin-sdk/ui-kit/react';
+import {
   buildStageHtml,
   parseNames,
   rangeCandidates,
@@ -103,217 +118,171 @@ export function App() {
     setWinner(null);
   };
 
-  const inputCls =
-    'rounded bg-neutral-800 px-2 py-1.5 text-sm text-neutral-100 outline-none focus:ring-2 focus:ring-indigo-500 disabled:opacity-50';
-
   return (
-    <div className="min-h-screen bg-neutral-900 text-neutral-100 p-4 flex flex-col gap-3">
-      <header>
-        <h1 className="text-lg font-semibold">Raffle</h1>
-        <p className="text-sm text-neutral-400">
-          Draw from a numeric range or a name list, with an animated wheel or
-          vertical reel.
-        </p>
-      </header>
+    <Root>
+      <Header
+        title="Raffle"
+        subtitle="Draw from a numeric range or a name list, with an animated wheel or vertical reel."
+      />
 
       {/* Target */}
-      <div className="flex gap-2">
-        <label className="flex flex-col text-xs text-neutral-400 flex-1">
-          Output
-          <select
-            value={output}
-            onChange={(e) => setOutput(e.target.value)}
-            className={`mt-1 ${inputCls}`}
-          >
+      <Row>
+        <Field label="Output">
+          <Select value={output} onChange={(e) => setOutput(e.target.value)}>
             {outputs.map((o) => (
               <option key={o.index} value={o.index}>
                 {o.name}
               </option>
             ))}
-          </select>
-        </label>
-        <label className="flex flex-col text-xs text-neutral-400 w-24">
-          Layer
-          <input
+          </Select>
+        </Field>
+        <Field label="Layer" grow={0} style={{ width: 96 }}>
+          <TextInput
             type="number"
             min={0}
             value={layer}
             onChange={(e) => setLayer(Number(e.target.value))}
-            className={`mt-1 ${inputCls}`}
           />
-        </label>
-      </div>
+        </Field>
+      </Row>
 
       {/* Mode */}
-      <div className="flex flex-col gap-2 rounded-lg bg-neutral-800/50 p-3">
-        <span className="text-xs font-medium text-neutral-300">Mode</span>
-        <div className="flex gap-2">
-          <button
-            onClick={() => setMode('names')}
-            className={`flex-1 rounded px-3 py-1.5 text-sm ${
-              mode === 'names'
-                ? 'bg-indigo-600 text-white'
-                : 'bg-neutral-800 text-neutral-300 hover:bg-neutral-700'
-            }`}
-          >
-            Name list
-          </button>
-          <button
-            onClick={() => setMode('range')}
-            className={`flex-1 rounded px-3 py-1.5 text-sm ${
-              mode === 'range'
-                ? 'bg-indigo-600 text-white'
-                : 'bg-neutral-800 text-neutral-300 hover:bg-neutral-700'
-            }`}
-          >
-            Numeric range
-          </button>
-        </div>
+      <Panel label="Mode">
+        <Segmented<RaffleMode>
+          value={mode}
+          onChange={setMode}
+          options={[
+            { value: 'names', label: 'Name list' },
+            { value: 'range', label: 'Numeric range' },
+          ]}
+        />
 
         {mode === 'names' ? (
-          <label className="flex flex-col text-xs text-neutral-400 mt-1">
-            Names (one per line)
-            <textarea
+          <Field label="Names (one per line)">
+            <TextArea
+              mono
               value={names}
               onChange={(e) => setNames(e.target.value)}
               rows={6}
-              className={`mt-1 resize-y font-mono ${inputCls}`}
             />
-          </label>
+          </Field>
         ) : (
-          <div className="flex gap-2 mt-1">
-            <label className="flex flex-col text-xs text-neutral-400 flex-1">
-              Minimum
-              <input
+          <Row>
+            <Field label="Minimum">
+              <TextInput
                 type="number"
                 value={min}
                 onChange={(e) => setMin(Number(e.target.value))}
-                className={`mt-1 ${inputCls}`}
               />
-            </label>
-            <label className="flex flex-col text-xs text-neutral-400 flex-1">
-              Maximum
-              <input
+            </Field>
+            <Field label="Maximum">
+              <TextInput
                 type="number"
                 value={max}
                 onChange={(e) => setMax(Number(e.target.value))}
-                className={`mt-1 ${inputCls}`}
               />
-            </label>
-          </div>
+            </Field>
+          </Row>
         )}
 
-        <div className="text-xs text-neutral-500">
+        <Hint>
           {rangeInvalid ? (
-            <span className="text-amber-400">
+            <span style={{ color: 'var(--sp-warning)' }}>
               Maximum must be greater than or equal to minimum.
             </span>
           ) : (
             <>
               {count} participant{count === 1 ? '' : 's'}
               {style === 'wheel' && count > 60 && (
-                <span className="text-amber-400">
+                <span style={{ color: 'var(--sp-warning)' }}>
                   {' '}
                   — the wheel shows a sample; vertical is better for large sets.
                 </span>
               )}
             </>
           )}
-        </div>
-      </div>
+        </Hint>
+      </Panel>
 
       {/* Style + options */}
-      <div className="flex flex-col gap-2 rounded-lg bg-neutral-800/50 p-3">
-        <span className="text-xs font-medium text-neutral-300">Animation</span>
-        <div className="flex gap-2">
-          <button
-            onClick={() => setStyle('wheel')}
-            className={`flex-1 rounded px-3 py-1.5 text-sm ${
-              style === 'wheel'
-                ? 'bg-indigo-600 text-white'
-                : 'bg-neutral-800 text-neutral-300 hover:bg-neutral-700'
-            }`}
-          >
-            🎡 Wheel
-          </button>
-          <button
-            onClick={() => setStyle('vertical')}
-            className={`flex-1 rounded px-3 py-1.5 text-sm ${
-              style === 'vertical'
-                ? 'bg-indigo-600 text-white'
-                : 'bg-neutral-800 text-neutral-300 hover:bg-neutral-700'
-            }`}
-          >
-            🎰 Vertical
-          </button>
-        </div>
-        <label className="flex flex-col text-xs text-neutral-400 mt-1">
-          Title (optional)
-          <input
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className={`mt-1 ${inputCls}`}
-          />
-        </label>
-        <label className="flex items-center gap-2 text-xs text-neutral-400 mt-1">
-          <input
-            type="checkbox"
-            checked={transparent}
-            onChange={(e) => setTransparent(e.target.checked)}
-          />
-          Transparent background (overlay the layer below)
-        </label>
-      </div>
+      <Panel label="Animation">
+        <Segmented<RaffleStyle>
+          value={style}
+          onChange={setStyle}
+          options={[
+            { value: 'wheel', label: '🎡 Wheel' },
+            { value: 'vertical', label: '🎰 Vertical' },
+          ]}
+        />
+        <Field label="Title (optional)">
+          <TextInput value={title} onChange={(e) => setTitle(e.target.value)} />
+        </Field>
+        <Checkbox
+          label="Transparent background (overlay the layer below)"
+          checked={transparent}
+          onChange={(e) => setTransparent(e.target.checked)}
+        />
+      </Panel>
 
       {/* Preview */}
-      <div className="rounded-lg bg-black overflow-hidden aspect-video border border-neutral-800">
+      <div
+        style={{
+          borderRadius: 'var(--sp-radius-lg)',
+          background: '#000',
+          overflow: 'hidden',
+          aspectRatio: '16 / 9',
+          border: '1px solid var(--sp-border)',
+        }}
+      >
         {preview ? (
           <iframe
             key={preview.token}
             title="preview"
             srcDoc={`<!doctype html><html><body style="margin:0">${preview.html}</body></html>`}
-            className="w-full h-full border-0"
+            style={{ width: '100%', height: '100%', border: 0 }}
             sandbox="allow-scripts"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-sm text-neutral-600">
+          <div
+            style={{
+              width: '100%',
+              height: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: 'var(--sp-text-faint)',
+              fontSize: 13,
+            }}
+          >
             Raffle preview
           </div>
         )}
       </div>
 
       {winner !== null && (
-        <div className="text-center text-sm">
+        <div style={{ textAlign: 'center', fontSize: 13 }}>
           Result:{' '}
-          <span className="font-semibold text-amber-400">{winner}</span>
+          <span style={{ fontWeight: 600, color: 'var(--sp-warning)' }}>
+            {winner}
+          </span>
         </div>
       )}
 
       {/* Actions */}
-      <div className="flex items-center gap-2">
-        <button
-          onClick={() => draw(false)}
-          disabled={!canDraw}
-          className="rounded bg-neutral-700 hover:bg-neutral-600 px-4 py-2 text-sm disabled:opacity-40"
-        >
+      <Actions>
+        <Button onClick={() => draw(false)} disabled={!canDraw}>
           Test preview
-        </button>
-        <button
-          onClick={() => draw(true)}
-          disabled={!canDraw}
-          className="rounded bg-emerald-600 hover:bg-emerald-500 px-4 py-2 text-sm font-medium disabled:opacity-40"
-        >
+        </Button>
+        <Button variant="success" onClick={() => draw(true)} disabled={!canDraw}>
           Draw live
-        </button>
+        </Button>
         {isLive && (
-          <button
-            onClick={clear}
-            className="ml-auto rounded bg-neutral-700 hover:bg-neutral-600 px-4 py-2 text-sm"
-          >
-            Clear
-          </button>
+          <>
+            <Actions.Spacer />
+            <Button onClick={clear}>Clear</Button>
+          </>
         )}
-      </div>
-    </div>
+      </Actions>
+    </Root>
   );
 }
